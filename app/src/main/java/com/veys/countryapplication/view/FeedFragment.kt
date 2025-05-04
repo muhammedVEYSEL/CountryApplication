@@ -50,7 +50,7 @@ class FeedFragment : Fragment() {
             binding.recyclerViewCountryList.visibility = View.GONE
             binding.contryErrorText.visibility = View.GONE
             binding.countryLoadingProgress.isVisible = true //KTX kullanarak yazım şekli
-            viewModel.refreshData()
+            viewModel.refreshFromAPI()
             binding.swipeRefreshLayout.isRefreshing = false
         }
         observeLiveData()

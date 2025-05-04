@@ -9,6 +9,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.veys.countryapplication.view.CountryDetailsFragmentArgs
 import com.veys.countryapplication.databinding.FragmentCountryDetailsBinding
+import com.veys.countryapplication.util.dowloadFromUrl
+import com.veys.countryapplication.util.placeHolderProgressBar
 import com.veys.countryapplication.viewmodel.CountryDetailsViewModel
 
 
@@ -17,7 +19,7 @@ class CountryDetailsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel : CountryDetailsViewModel
-    //private var countryUuid = 0
+    private var countryUuid = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,24 +38,31 @@ class CountryDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        arguments?.let {
+                    countryUuid = CountryDetailsFragmentArgs.fromBundle(it).countryUuid
+                }
         viewModel = ViewModelProvider(this)[CountryDetailsViewModel::class.java]
-        viewModel.getDataFromRoom()
+        viewModel.getDataFromRoom(countryUuid)
 
         observeLiveData()
 
-        /*arguments?.let {
-            countryUuid = CountryDetailsFragmentArgs.fromBundle(it).countryUuid
-        }*/
+
     }
 
     private fun observeLiveData(){
-        viewModel.countryLiveData.observe(viewLifecycleOwner, Observer { it ->
-            it?.let {
-                binding.countryName.text = it.countryName
-                binding.countryCapital.text = it.countryCapital
-                binding.countryCurrency.text = it.countryCurrency
-                binding.countryRegion.text = it.countryRegion
-                binding.countryLanguage.text = it.countryLanguage
+        viewModel.countryLiveData.observe(viewLifecycleOwner, Observer { country ->
+            country?.let {
+                binding.countryName.text = country.countryName
+                binding.countryCapital.text = country.countryCapital
+                binding.countryCurrency.text = country.countryCurrency
+                binding.countryRegion.text = country.countryRegion
+                binding.countryLanguage.text = country.countryLanguage
+                context?.let {
+                    binding.countryFlagImage.dowloadFromUrl(country.countryImageUri,
+                        placeHolderProgressBar(it)
+                    )
+                }
+
 
             }
         })
