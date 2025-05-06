@@ -2,6 +2,7 @@ package com.veys.countryapplication.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
@@ -15,7 +16,7 @@ import com.veys.countryapplication.util.dowloadFromUrl
 import com.veys.countryapplication.util.placeHolderProgressBar
 import com.veys.countryapplication.view.FeedFragmentDirections
 
-class CountryRecycleAdapter(private val countryList : ArrayList<Country>) :RecyclerView.Adapter<CountryRecycleAdapter.CountryHolder>(){
+class CountryRecycleAdapter(private val countryList : ArrayList<Country>) :RecyclerView.Adapter<CountryRecycleAdapter.CountryHolder>(),CountryClickListener{
     class CountryHolder(val binding : ItemCountryRowBinding):RecyclerView.ViewHolder(binding.root){
 
     }
@@ -30,6 +31,8 @@ class CountryRecycleAdapter(private val countryList : ArrayList<Country>) :Recyc
     override fun onBindViewHolder(holder: CountryHolder, position: Int) {
 
         holder.binding.country = countryList[position]
+        holder.binding.listener = this
+
         /*
         holder.binding.counrtyNameText.text = countryList[position].countryName
         holder.binding.contryDetailsText.text = countryList[position].countryCapital
@@ -55,4 +58,12 @@ class CountryRecycleAdapter(private val countryList : ArrayList<Country>) :Recyc
         countryList.addAll(newCountryList)
         notifyDataSetChanged()
     }
+
+    override fun onCountryClicked(v: View) {
+        val uuid = ItemCountryRowBinding.bind(v).countryUuidText.toString().toInt()
+        val action = FeedFragmentDirections.actionFeedFragmentToCountryDetailsFragment(uuid)
+        Navigation.findNavController(v).navigate(action)
+    }
+
+
 }

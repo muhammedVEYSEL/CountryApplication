@@ -4,11 +4,24 @@
         <variable
             name="country"
             type="com.veys.countryapplication.model.Country" />
+        <variable
+            name="Listener"
+            type="com.veys.countryapplication.adapter.CountryClickListener" />
     </data>
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="150dp"
+    android:onClick="@{Listener::onCountryClicked}"
     android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/countryUuidText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@{String.valueOf(country.uuid)}"
+        ></TextView>
+
     <ImageView
         android:id="@+id/Countryimageview"
         android:layout_width="0dp"
